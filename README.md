@@ -1,8 +1,12 @@
-# Nvim-autoheader
+# NvimAutoheader
 
 Automatic header management for [Neovim](https://github.com/neovim/neovim)
 
 ![](http://epwalsh.com/images/NvimAutoheader.gif)
+
+![](http://epwalsh.com/images/NvimAutoheader_c.png)
+
+![](http://epwalsh.com/images/NvimAutoheader_vim.png)
 
 ### Install
 

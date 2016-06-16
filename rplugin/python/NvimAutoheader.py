@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-16 12:27:15
+# Last Modified: 2016-06-16 12:33:56
 # =============================================================================
 
 import neovim
@@ -52,7 +52,7 @@ def edit_timestamp(cb):
 
 
 @neovim.plugin
-class Autoheader(object):
+class NvimAutoheader(object):
     def __init__(self, nvim):
         self.nvim = nvim
 

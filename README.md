@@ -1,5 +1,7 @@
 # NvimAutoheader
 
+[![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/epwalsh/NvimAutoheader/blob/master/LICENSE)
+
 Automatic header management for [Neovim](https://github.com/neovim/neovim)
 
 ![](http://epwalsh.com/images/NvimAutoheader.gif)
@@ -44,10 +46,10 @@ let g:NvimAutoheader_contact = 'your email'
 let g:NvimAutoheader_website = 'your website'
 ```
 
-If you do set these variables, NvimAutoheader will not include these lines in the 
+If you do not set these variables, NvimAutoheader will not include these lines in the 
 header.
 
-To disable autoheader, 
+To disable automatically inserting headers into new files: 
 
 ```vim
 let g:NvimAutoheader = 0

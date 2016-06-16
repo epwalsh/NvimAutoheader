@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-16 12:33:56
+# Last Modified: 2016-06-16 13:00:34
 # =============================================================================
 
 import neovim
@@ -91,6 +91,9 @@ class NvimAutoheader(object):
         ft = filetypes[ext]
         line_start = styles[ft]['line_start']
         cb = self.nvim.current.buffer
+        author = self.nvim.eval('g:NvimAutoheader_author')
+        contact = self.nvim.eval('g:NvimAutoheader_contact')
+        website = self.nvim.eval('g:NvimAutoheader_website')
 
         if styles[ft]['shebang'] is None:
             cb[0] = line_start + ' ' + ''.join('=' * 77)
@@ -101,8 +104,12 @@ class NvimAutoheader(object):
             cb.append(line_start + ' ' + ''.join('=' * 77))
 
         cb.append(line_start + ' File Name:     ' + filename)
-        cb.append(line_start + ' Author:        ' + self.nvim.eval('g:NvimAutoheader_author'))
-        cb.append(line_start + ' Contact:       ' + self.nvim.eval('g:NvimAutoheader_contact'))
+        if len(author) > 0:
+            cb.append(line_start + ' Author:        ' + author)
+        if len(contact) > 0:
+            cb.append(line_start + ' Contact:       ' + contact)
+        if len(website) > 0:
+            cb.append(line_start + ' Website:       ' + website)
         cb.append(line_start + ' Creation Date: ' + strftime('%Y-%m-%d'))
         cb.append(line_start + ' Last Modified: ')
 

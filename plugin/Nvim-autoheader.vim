@@ -3,7 +3,6 @@
 " two different approaches but it is not required you use VimL. Feel free to
 " delete this code and proceed without it.
 
-echo "Testing Nvim-autoheader"
 
 function DoItVimL()
     echo "DoItVimL"

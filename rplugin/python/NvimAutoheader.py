@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-16 14:10:33
+# Last Modified: 2016-06-16 14:57:03
 # =============================================================================
 
 import neovim
@@ -56,20 +56,20 @@ class NvimAutoheader(object):
     def __init__(self, nvim):
         self.nvim = nvim
 
-    @neovim.autocmd('FileWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
-    #  @neovim.function('Update_header', eval='expand("<afile>")')
-    def on_file_write(self, filename):
+    #  @neovim.autocmd('FileWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
+    @neovim.function('Update_header', eval='expand("<afile>")', sync=True)
+    def on_file_write(self, args, filename):
         cb = self.nvim.current.buffer
         edit_name(cb, filename)
         edit_timestamp(cb)
         self.nvim.command('set nomodified')
 
-    @neovim.autocmd('BufWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
-    def on_buf_write(self, filename):
-        cb = self.nvim.current.buffer
-        edit_name(cb, filename)
-        edit_timestamp(cb)
-        self.nvim.command('set nomodified')
+    #  @neovim.autocmd('BufWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
+    #  def on_buf_write(self, filename):
+        #  cb = self.nvim.current.buffer
+        #  edit_name(cb, filename)
+        #  edit_timestamp(cb)
+        #  self.nvim.command('set nomodified')
 
     #  @neovim.autocmd('BufNewFile', pattern='*.*', eval='expand("<afile>")')
     @neovim.function('InsertHeader', eval='expand("<afile>")')

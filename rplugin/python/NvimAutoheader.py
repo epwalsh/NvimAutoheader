@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-16 13:00:34
+# Last Modified: 2016-06-16 14:10:33
 # =============================================================================
 
 import neovim
@@ -56,11 +56,6 @@ class NvimAutoheader(object):
     def __init__(self, nvim):
         self.nvim = nvim
 
-    @neovim.function('TestIt')
-    def test_it(self, args):
-        ext = self.nvim.eval('expand("%:e")').lower()
-        self.nvim.command('echom "hello ' + ext + '"')
-
     @neovim.autocmd('FileWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
     #  @neovim.function('Update_header', eval='expand("<afile>")')
     def on_file_write(self, filename):
@@ -70,7 +65,6 @@ class NvimAutoheader(object):
         self.nvim.command('set nomodified')
 
     @neovim.autocmd('BufWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
-    #  @neovim.function('On_buf_write', eval='expand("<afile>")')
     def on_buf_write(self, filename):
         cb = self.nvim.current.buffer
         edit_name(cb, filename)
@@ -80,11 +74,6 @@ class NvimAutoheader(object):
     #  @neovim.autocmd('BufNewFile', pattern='*.*', eval='expand("<afile>")')
     @neovim.function('InsertHeader', eval='expand("<afile>")')
     def insert_header(self, args, filename):
-        """
-        For some reason this function will not work as an autocmd, sometimes.
-        The behavior is very strange, it works on one of my computers but 
-        not the other. Calling it from vimscript works fine in an autocmd.
-        """
         ext = self.nvim.eval('expand("%:e")').lower()
         if ext not in filetypes.keys():
             return None

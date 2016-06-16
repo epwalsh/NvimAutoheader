@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-16 01:06:09
+# Last Modified: 2016-06-16 09:28:08
 # =============================================================================
 
 import neovim
@@ -37,14 +37,16 @@ styles = {
 
 
 def edit_name(cb, filename):
-    for index in range(10):
+    n = min([12, len(cb)])
+    for index in range(n):
         if re.search(r'File Name:\s.*', cb[index]):
             cb[index] = re.sub(r'(^.*File Name:\s*)([^\s].*)$', r'\1' + filename, cb[index])
 
 
 def edit_timestamp(cb):
     time = strftime('%Y-%m-%d %H:%M:%S')
-    for index in range(10):
+    n = min([12, len(cb)])
+    for index in range(n):
         if re.search(r'Last Modified:.*', cb[index]):
             cb[index] = re.sub(r'(^.*Last Modified:).*$', r'\1 ' + time, cb[index])
 
@@ -59,17 +61,19 @@ class Autoheader(object):
         ext = self.nvim.eval('expand("%:e")').lower()
         self.nvim.command('echom "hello ' + ext + '"')
 
-    @neovim.autocmd('FileWritePre', pattern='*.*', eval='expand("<afile>")')
+    @neovim.autocmd('FileWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
     def on_file_write(self, filename):
         cb = self.nvim.current.buffer
         edit_name(cb, filename)
         edit_timestamp(cb)
+        self.nvim.command('set nomodified')
 
-    @neovim.autocmd('BufWritePre', pattern='*.*', eval='expand("<afile>")')
+    @neovim.autocmd('BufWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
     def on_buf_write(self, filename):
         cb = self.nvim.current.buffer
         edit_name(cb, filename)
         edit_timestamp(cb)
+        self.nvim.command('set nomodified')
 
     @neovim.autocmd('BufNewFile', pattern='*.*', eval='expand("<afile>")')
     def insert_header(self, filename):
@@ -104,3 +108,4 @@ class Autoheader(object):
         cb.append('')
 
         self.nvim.current.window.cursor = [len(cb), 0]
+        self.nvim.command('set nomodified')

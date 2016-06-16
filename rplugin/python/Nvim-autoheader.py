@@ -2,13 +2,14 @@ import neovim
 
 
 @neovim.plugin
-class Main(object):
+class Autoheader(object):
     def __init__(self, nvim):
         self.nvim = nvim
 
     @neovim.function('DoItPython')
     def doItPython(self, args):
-        self.nvim.command('echom "hello"')
+        ext = self.nvim.eval('expand("%:s")')
+        self.nvim.command('echom "hello ' + ext + '"')
 
     @neovim.autocmd('FileWritePost', pattern='*.*')
     def on_write(self):

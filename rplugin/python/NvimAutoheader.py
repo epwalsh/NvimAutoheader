@@ -1,9 +1,9 @@
 # =============================================================================
-# File Name:     Nvim-autoheader.py
+# File Name:     NvimAutoheader.py
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-16 09:28:08
+# Last Modified: 2016-06-16 12:27:15
 # =============================================================================
 
 import neovim
@@ -62,6 +62,7 @@ class Autoheader(object):
         self.nvim.command('echom "hello ' + ext + '"')
 
     @neovim.autocmd('FileWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
+    #  @neovim.function('Update_header', eval='expand("<afile>")')
     def on_file_write(self, filename):
         cb = self.nvim.current.buffer
         edit_name(cb, filename)
@@ -69,14 +70,21 @@ class Autoheader(object):
         self.nvim.command('set nomodified')
 
     @neovim.autocmd('BufWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
+    #  @neovim.function('On_buf_write', eval='expand("<afile>")')
     def on_buf_write(self, filename):
         cb = self.nvim.current.buffer
         edit_name(cb, filename)
         edit_timestamp(cb)
         self.nvim.command('set nomodified')
 
-    @neovim.autocmd('BufNewFile', pattern='*.*', eval='expand("<afile>")')
-    def insert_header(self, filename):
+    #  @neovim.autocmd('BufNewFile', pattern='*.*', eval='expand("<afile>")')
+    @neovim.function('InsertHeader', eval='expand("<afile>")')
+    def insert_header(self, args, filename):
+        """
+        For some reason this function will not work as an autocmd, sometimes.
+        The behavior is very strange, it works on one of my computers but 
+        not the other. Calling it from vimscript works fine in an autocmd.
+        """
         ext = self.nvim.eval('expand("%:e")').lower()
         if ext not in filetypes.keys():
             return None
@@ -93,8 +101,8 @@ class Autoheader(object):
             cb.append(line_start + ' ' + ''.join('=' * 77))
 
         cb.append(line_start + ' File Name:     ' + filename)
-        cb.append(line_start + ' Author:        Evan Pete Walsh')
-        cb.append(line_start + ' Contact:       epwalsh@iastate.edu')
+        cb.append(line_start + ' Author:        ' + self.nvim.eval('g:NvimAutoheader_author'))
+        cb.append(line_start + ' Contact:       ' + self.nvim.eval('g:NvimAutoheader_contact'))
         cb.append(line_start + ' Creation Date: ' + strftime('%Y-%m-%d'))
         cb.append(line_start + ' Last Modified: ')
 

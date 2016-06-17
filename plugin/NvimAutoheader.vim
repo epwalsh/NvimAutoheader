@@ -3,7 +3,7 @@
 " Author:        Evan Pete Walsh
 " Contact:       epwalsh10@gmail.com
 " Creation Date: 2016-06-16
-" Last Modified: 2016-06-16 17:41:18
+" Last Modified: 2016-06-17 00:27:48
 " =============================================================================
 
 
@@ -16,6 +16,8 @@ if !exists('g:NvimAutoheader')
 endif
 
 if g:NvimAutoheader
+    let g:NvimAutoheader_location = expand("<sfile>:h")
+
     if !exists('g:NvimAutoheader_author')
         let g:NvimAutoheader_author = ''
     endif
@@ -27,6 +29,12 @@ if g:NvimAutoheader
     endif
     if !exists('g:NvimAutoheader_width')
         let g:NvimAutoheader_width = 80
+    endif
+    if !exists('g:NvimAutoheader_license_verbose')
+        let g:NvimAutoheader_license_verbose = 0
+        if !exists('g:NvimAutoheader_license')
+            let g:NvimAutoheader_license = ''
+        endif
     endif
 
     call NvimAutoheader#activate_autoheader()

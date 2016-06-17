@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-16 18:25:50
+# Last Modified: 2016-06-17 00:32:23
 # =============================================================================
 
 import neovim
@@ -58,20 +58,16 @@ def find_header_end(cb):
             return index + 1
 
 
-# Need to fix this insert function
-def insert(cb, index, item):
-    temp = cb[index]
-    cb[index] = item
-    if len(cb) <= (index + 1):
-        cb.append(temp)
-    else:
-        cb[index + 1] = temp
-
-
 @neovim.plugin
 class NvimAutoheader(object):
     def __init__(self, nvim):
         self.nvim = nvim
+        #  self._author = self.nvim.eval('g:NvimAutoheader_author')
+        #  self._contact = self.nvim.eval('g:NvimAutoheader_contact')
+        #  self._website = self.nvim.eval('g:NvimAutoheader_website')
+        #  self._width = self.nvim.eval('g:NvimAutoheader_width')
+        #  self._license = self.nvim.eval('g:NvimAutoheader_license')
+        #  self._license_verbose = self.nvim.eval('g:NvimAutoheader_license_verbose')
 
     #  @neovim.autocmd('FileWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
     @neovim.function('Update_header', eval='expand("<afile>")', sync=True)
@@ -93,6 +89,13 @@ class NvimAutoheader(object):
         #  edit_timestamp(cb)
         #  self.nvim.command('set nomodified')
 
+    def format_wrap(self, width, start):
+        tw = self.nvim.eval('&tw')
+        self.nvim.command('set formatoptions+=w')
+        self.nvim.command('set tw=' + str(width - 1))
+        self.nvim.command('normal! ' + str(start) + 'gggqG')
+        self.nvim.command('set tw=' + str(tw))
+
     #  @neovim.autocmd('BufNewFile', pattern='*.*', eval='expand("<afile>")')
     @neovim.function('InsertHeader', eval='expand("<afile>")')
     def insert_header(self, args, filename):
@@ -111,6 +114,8 @@ class NvimAutoheader(object):
         contact = self.nvim.eval('g:NvimAutoheader_contact')
         website = self.nvim.eval('g:NvimAutoheader_website')
         width = self.nvim.eval('g:NvimAutoheader_width')
+        license = self.nvim.eval('g:NvimAutoheader_license')
+        license_verbose = self.nvim.eval('g:NvimAutoheader_license_verbose')
 
         if styles[ft]['shebang'] is None:
             cb[0] = line_start + ' ' + ''.join('=' * (width - 3))
@@ -128,6 +133,22 @@ class NvimAutoheader(object):
             cb.append(line_start + ' Website:       ' + website)
         cb.append(line_start + ' Creation Date: ' + strftime('%Y-%m-%d'))
         cb.append(line_start + ' Last Modified: ')
+        start = len(cb) + 1
+        if len(license) > 0:
+            if license_verbose > 0:
+                cb.append(line_start + ' LICENSE:       ' + 'The ' + license + ' License')
+                path = self.nvim.eval('g:NvimAutoheader_location')
+                with open(path + '/licenses/' + license, 'r') as f:
+                    lines = f.read().splitlines()
+                cb.append(line_start)
+                cb.append(line_start + '    Copyright (c) ' + strftime('%Y') + ' ' + author)
+                cb.append(line_start)
+                for line in lines:
+                    cb.append(line_start + '    ' + line)
+                cb.append(line_start)
+                self.format_wrap(width, start)
+            else:
+                cb.append(line_start + ' LICENSE:       ' + license)
         if styles[ft]['postfix'] is not None:
             cb.append(line_start + ' ' + ''.join('=' * (width - 4)))
             cb.append(styles[ft]['postfix'])
@@ -153,10 +174,20 @@ class NvimAutoheader(object):
         index = find_header_end(cb)
 
         for path in args:
-            with open(path, 'r') as f:
-                lines = f.read().splitlines()
-            insert(cb, index, line_start)
-            index += 1
-            for line in lines:
-                insert(cb, index, line_start + ' ' + line)
-                index += 1
+            n = self.nvim.eval('line("$")')
+            self.nvim.command(str(index) + 'r ' + path)
+            n = self.nvim.eval('line("$")') - n
+            self.nvim.command('echom ' + str(n))
+            k = 0
+            while k < n:
+                cb[index + k] = line_start + ' ' + cb[index + k]
+                k += 1
+
+        #  for path in args:
+            #  with open(path, 'r') as f:
+                #  lines = f.read().splitlines()
+            #  insert(cb, index, line_start)
+            #  index += 1
+            #  for line in lines:
+                #  insert(cb, index, line_start + ' ' + line)
+                #  index += 1

@@ -1,18 +1,36 @@
 *NvimAutoheader.txt* Automatic header management for Neovim
 
+ _   _       _            ___        _        _                    _           ~
+| \ | |     (_)          / _ \      | |      | |                  | |          ~
+|  \| |_   ___ _ __ ___ / /_\ \_   _| |_ ___ | |__   ___  __ _  __| | ___ _ __ ~
+| . ` \ \ / / | '_ ` _ \|  _  | | | | __/ _ \| '_ \ / _ \/ _` |/ _` |/ _ \ '__|~
+| |\  |\ V /| | | | | | | | | | |_| | || (_) | | | |  __/ (_| | (_| |  __/ |   ~
+\_| \_/ \_/ |_|_| |_| |_\_| |_/\__,_|\__\___/|_| |_|\___|\__,_|\__,_|\___|_|   ~
+                                                                               ~
+
+ 	                    Do headers right.
+                                                                               
 Version: 1.0
 Author: Evan P Walsh <epwalsh10@gmail.com>
 License: MIT license
 
-CONTENTS					*NvimAutoheader-contents*
+CONTENTS					      *NvimAutoheader-contents*
 
-Introduction		|NvimAutoheader-introduction|
-Install			|NvimAutoheader-install|
+Introduction		    |NvimAutoheader-introduction|
+Install			    |NvimAutoheader-install|
 
-==============================================================================
-INTRODUCTION					*NvimAutoheader-introduction*
+===============================================================================
+INTRODUCTION					  *NvimAutoheader-introduction*
 
+NvimAutoheader is a plugin for automatically inserting and managing headers.
+When a new file is opened, a header with custom information is inserted in a 
+commented block at the top of the document. Each time the file is saved,
+the 'Last Modified' timestamp in the header will be updated. NvimAutoheader
+also provides a command to easily insert an open source license into the header,
+or even an arbitrary text document.
 
-==============================================================================
-INSTALL						*NvimAutoheader-install*
+===============================================================================
+INSTALL						       *NvimAutoheader-install*
 
+NvimAutoheader requires the latest Neovim and Python client for Neovim. To
+update the Python client, `pip install --upgrade neovim`.

@@ -4,7 +4,7 @@
 
 Automatic header management for [Neovim](https://github.com/neovim/neovim)
 
-![](http://epwalsh.com/images/NvimAutoheader_main.gif)
+![](doc/NvimAutoheader_main.gif)
 
 ### Install
 

@@ -50,3 +50,37 @@ To disable automatically inserting headers into new files:
 ```vim
 let g:NvimAutoheader = 0
 ```
+
+### Other features
+
+To automatically insert an open source license into the header of new files:
+
+```vim
+let g:NvimAutoheader_license = 'MIT'      # Automatically add MIT license
+let g:NvimAutoheader_license_verbose = 1  # Put full license text into header
+```
+
+To insert a full license into a file use the following command:
+
+```vim
+HeaderLicense MIT
+```
+
+Current licenses that are supported:
+- MIT
+- Apache-2.0
+- GPL
+- BSD
+
+If NvimAutoheader doesn't have a copy of the full license that you wish to insert,
+you can add a file to ```plugin/licenses/[Name of license]``` with the text and NvimAutoheader will insert that header when you call
+
+```vim
+HeaderLicense [Name of license]
+```
+
+To insert an arbitrary file into the header:
+
+```vim
+HeaderAppend [path to file]
+```

@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-17 18:58:37
+# Last Modified: 2016-06-18 11:40:10
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -38,7 +38,8 @@ filetypes = {
     'c': 'C', 'cpp': 'C', 'h': 'C', 'hpp': 'C',
     'sh': 'bash',
     'vim': 'vim',
-    'js': 'javascript'
+    'js': 'javascript',
+    'java': 'java'
 }
 
 
@@ -54,6 +55,8 @@ styles = {
     'bash':       {'line_start': '#',  'prefix': None, 'postfix': None,
                    'shebang': '#!/bin/bash'},
     'javascript': {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
+                   'shebang': None},
+    'java':       {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
                    'shebang': None}
 }
 

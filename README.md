@@ -2,8 +2,11 @@
 
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/epwalsh/NvimAutoheader/blob/master/LICENSE)
 
-Automatic header management for [Neovim](https://github.com/neovim/neovim). Currently
-supported filetypes:
+Automatic header management for [Neovim](https://github.com/neovim/neovim) 
+
+![](doc/NvimAutoheader_main.gif)
+
+Currently supported filetypes:
 - Python
 - R
 - C / C++
@@ -15,8 +18,6 @@ supported filetypes:
 - Go
 - Ruby
 - PHP
-
-![](doc/NvimAutoheader_main.gif)
 
 ### Install
 

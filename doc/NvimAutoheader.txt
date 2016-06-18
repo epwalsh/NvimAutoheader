@@ -1,0 +1,18 @@
+*NvimAutoheader.txt* Automatic header management for Neovim
+
+Version: 1.0
+Author: Evan P Walsh <epwalsh10@gmail.com>
+License: MIT license
+
+CONTENTS					*NvimAutoheader-contents*
+
+Introduction		|NvimAutoheader-introduction|
+Install			|NvimAutoheader-install|
+
+==============================================================================
+INTRODUCTION					*NvimAutoheader-introduction*
+
+
+==============================================================================
+INSTALL						*NvimAutoheader-install*
+

@@ -86,7 +86,7 @@ Current licenses that are supported:
 - BSD
 
 If NvimAutoheader doesn't have a copy of the full license that you wish to insert,
-you can add a file to ```plugin/licenses/[Name of license]``` with the text and NvimAutoheader will insert that header when you call
+you can add a file to ```NvimAutoheader/plugin/licenses/[Name of license]``` with the text and NvimAutoheader will insert that header when you call
 
 ```vim
 :HeaderLicense [Name of license]

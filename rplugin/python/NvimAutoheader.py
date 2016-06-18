@@ -3,7 +3,29 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-17 00:32:23
+# Last Modified: 2016-06-17 18:58:37
+# LICENSE:       The MIT License
+#
+#    Copyright (c) 2016 Evan Pete Walsh
+#
+#    Permission is hereby granted, free of charge, to any person obtaining a 
+#    copy of this software and associated documentation files (the "Software"), 
+#    to deal in the Software without restriction, including without limitation 
+#    the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+#    and/or sell copies of the Software, and to permit persons to whom the 
+#    Software is furnished to do so, subject to the following conditions:
+#    
+#    The above copyright notice and this permission notice shall be included in 
+#    all copies or substantial portions of the Software.
+#    
+#    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+#    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+#    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+#    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+#    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+#    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+#    DEALINGS IN THE SOFTWARE.
+#    
 # =============================================================================
 
 import neovim
@@ -36,38 +58,78 @@ styles = {
 }
 
 
-def edit_name(cb, filename):
-    n = min([12, len(cb)])
-    for index in range(n):
-        if re.search(r'File Name:\s.*', cb[index]):
-            cb[index] = re.sub(r'(^.*File Name:\s*)([^\s].*)$', r'\1' + filename, cb[index])
-
-
-def edit_timestamp(cb):
-    time = strftime('%Y-%m-%d %H:%M:%S')
-    n = min([12, len(cb)])
-    for index in range(n):
-        if re.search(r'Last Modified:.*', cb[index]):
-            cb[index] = re.sub(r'(^.*Last Modified:).*$', r'\1 ' + time, cb[index])
-
-
-def find_header_end(cb):
-    n = min([12, len(cb)])
-    for index in range(n):
-        if re.search(r'Last Modified:.*', cb[index]):
-            return index + 1
-
-
 @neovim.plugin
 class NvimAutoheader(object):
+
     def __init__(self, nvim):
         self.nvim = nvim
-        #  self._author = self.nvim.eval('g:NvimAutoheader_author')
-        #  self._contact = self.nvim.eval('g:NvimAutoheader_contact')
-        #  self._website = self.nvim.eval('g:NvimAutoheader_website')
-        #  self._width = self.nvim.eval('g:NvimAutoheader_width')
-        #  self._license = self.nvim.eval('g:NvimAutoheader_license')
-        #  self._license_verbose = self.nvim.eval('g:NvimAutoheader_license_verbose')
+
+
+    def edit_name(self, filename):
+        cb = self.nvim.current.buffer
+        n = min([12, len(cb)])
+        for index in range(n):
+            if re.search(r'File Name:\s.*', cb[index]):
+                cb[index] = re.sub(r'(^.*File Name:\s*)([^\s].*)$', r'\1' + filename, cb[index])
+    
+    
+    def edit_timestamp(self):
+        cb = self.nvim.current.buffer
+        time = strftime('%Y-%m-%d %H:%M:%S')
+        n = min([12, len(cb)])
+        for index in range(n):
+            if re.search(r'Last Modified:.*', cb[index]):
+                cb[index] = re.sub(r'(^.*Last Modified:).*$', r'\1 ' + time, cb[index])
+    
+    
+    def find_header_end(self):
+        cb = self.nvim.current.buffer
+        n = min([12, len(cb)])
+        for index in range(n):
+            if re.search(r'Last Modified:.*', cb[index]):
+                return index + 1
+        return 0
+
+
+    def format_wrap(self, width, start, stop):
+        tw = self.nvim.eval('&tw')
+        self.nvim.command('set formatoptions+=w')
+        self.nvim.command('set tw=' + str(width - 1))
+        self.nvim.command('normal! ' + str(start) + 'gggq' + str(stop) + 'gg')
+        self.nvim.command('set tw=' + str(tw))
+
+
+    def insert(self, paths, index, prefix=''):
+        """
+        Insert files from list of paths starting at 'index'.
+        """
+        for path in paths:
+            cb = self.nvim.current.buffer
+            n = self.nvim.eval('line("$")')
+            self.nvim.command(str(index) + 'r ' + path)
+            n = self.nvim.eval('line("$")') - n
+            k = 0
+            while k < n:
+                cb[index + k] = prefix + cb[index + k]
+                k += 1
+            index += k
+            self.insert_text(index, prefix)
+            index += 1
+
+
+    def insert_text(self, index, text):
+        """
+        Insert text into given line in buffer.
+        """
+        cb = self.nvim.current.buffer
+        temp = cb[index:]
+        cb[index] = text
+        cb[(index + 1):] = temp
+
+    
+    def print_error(self, msg):
+        self.nvim.command('echohl Error | echomsg "[NvimAutoheader] ' + msg + '" | echohl None')
+
 
     #  @neovim.autocmd('FileWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
     @neovim.function('Update_header', eval='expand("<afile>")', sync=True)
@@ -78,23 +140,10 @@ class NvimAutoheader(object):
         changed.
         """
         cb = self.nvim.current.buffer
-        edit_name(cb, filename)
-        edit_timestamp(cb)
+        self.edit_name(filename)
+        self.edit_timestamp()
         self.nvim.command('set nomodified')
 
-    #  @neovim.autocmd('BufWritePre', pattern='*.*', eval='expand("<afile>")', sync=True)
-    #  def on_buf_write(self, filename):
-        #  cb = self.nvim.current.buffer
-        #  edit_name(cb, filename)
-        #  edit_timestamp(cb)
-        #  self.nvim.command('set nomodified')
-
-    def format_wrap(self, width, start):
-        tw = self.nvim.eval('&tw')
-        self.nvim.command('set formatoptions+=w')
-        self.nvim.command('set tw=' + str(width - 1))
-        self.nvim.command('normal! ' + str(start) + 'gggqG')
-        self.nvim.command('set tw=' + str(tw))
 
     #  @neovim.autocmd('BufNewFile', pattern='*.*', eval='expand("<afile>")')
     @neovim.function('InsertHeader', eval='expand("<afile>")')
@@ -146,7 +195,7 @@ class NvimAutoheader(object):
                 for line in lines:
                     cb.append(line_start + '    ' + line)
                 cb.append(line_start)
-                self.format_wrap(width, start)
+                self.format_wrap(width, start, len(cb))
             else:
                 cb.append(line_start + ' LICENSE:       ' + license)
         if styles[ft]['postfix'] is not None:
@@ -160,34 +209,45 @@ class NvimAutoheader(object):
         self.nvim.current.window.cursor = [len(cb), 0]
         self.nvim.command('set nomodified')
 
-    @neovim.command('NvimAutoheaderAppend', range='', nargs='*')
-    def append_header(self, args, range):
-        #  self.nvim.current.line = ('Command with args: {}, range: {}' .format(args, range))
+
+    @neovim.command('HeaderLicense', nargs=1)
+    def insert_license(self, args):
         ext = self.nvim.eval('expand("%:e")').lower()
         if ext not in filetypes.keys():
-            self.nvim.command('echom "[NvimAutoheader] Unknown filetype"')
+            self.print_error("Sorry, we don't know how to handle this filetype yet")
             return None
 
         ft = filetypes[ext]
         line_start = styles[ft]['line_start']
         cb = self.nvim.current.buffer
-        index = find_header_end(cb)
+        author = self.nvim.eval('g:NvimAutoheader_author')
+        index = self.find_header_end()
+        width = self.nvim.eval('g:NvimAutoheader_width')
+        path = self.nvim.eval('g:NvimAutoheader_location')
 
-        for path in args:
-            n = self.nvim.eval('line("$")')
-            self.nvim.command(str(index) + 'r ' + path)
-            n = self.nvim.eval('line("$")') - n
-            self.nvim.command('echom ' + str(n))
-            k = 0
-            while k < n:
-                cb[index + k] = line_start + ' ' + cb[index + k]
-                k += 1
+        n = len(cb)
+        self.insert_text(index, line_start + ' LICENSE:       ' + 'The ' + args[0] + ' License')
+        self.insert_text(index + 1, line_start)
+        self.insert_text(index + 2, line_start + '    Copyright (c) ' + strftime('%Y') + ' ' + author)
+        self.insert_text(index + 3, line_start)
+        self.insert([path + '/licenses/' + args[0]], index + 4, line_start + '    ')
+        self.format_wrap(width, index + 5, index + len(cb) - n)
 
-        #  for path in args:
-            #  with open(path, 'r') as f:
-                #  lines = f.read().splitlines()
-            #  insert(cb, index, line_start)
-            #  index += 1
-            #  for line in lines:
-                #  insert(cb, index, line_start + ' ' + line)
-                #  index += 1
+
+    @neovim.command('HeaderAppend', nargs='*')
+    def append_header(self, args):
+        ext = self.nvim.eval('expand("%:e")').lower()
+        if ext not in filetypes.keys():
+            self.print_error("Sorry, we don't know how to handle this filetype yet")
+            return None
+
+        ft = filetypes[ext]
+        line_start = styles[ft]['line_start']
+        cb = self.nvim.current.buffer
+        index = self.find_header_end()
+        width = self.nvim.eval('g:NvimAutoheader_width')
+
+        n = len(cb)
+        self.insert_text(index, line_start)
+        self.insert(args, index + 1, line_start + ' ')
+        self.format_wrap(width, index + 2, index + len(cb) - n)

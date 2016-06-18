@@ -75,7 +75,7 @@ let g:NvimAutoheader_license_verbose = 1  # Put full license text into header
 To insert a full license into a file use the following command:
 
 ```vim
-HeaderLicense MIT
+:HeaderLicense MIT
 ```
 
 Current licenses that are supported:
@@ -88,11 +88,11 @@ If NvimAutoheader doesn't have a copy of the full license that you wish to inser
 you can add a file to ```plugin/licenses/[Name of license]``` with the text and NvimAutoheader will insert that header when you call
 
 ```vim
-HeaderLicense [Name of license]
+:HeaderLicense [Name of license]
 ```
 
 To insert an arbitrary file into the header:
 
 ```vim
-HeaderAppend [path to file]
+:HeaderAppend [path to file]
 ```

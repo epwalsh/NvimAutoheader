@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-18 11:40:10
+# Last Modified: 2016-06-18 12:00:11
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -36,10 +36,14 @@ filetypes = {
     'py': 'python',
     'r': 'R',
     'c': 'C', 'cpp': 'C', 'h': 'C', 'hpp': 'C',
-    'sh': 'bash',
+    'sh': 'shell',
     'vim': 'vim',
     'js': 'javascript',
-    'java': 'java'
+    'java': 'java',
+    'jl': 'julia',
+    'go': 'go',
+    'rb': 'ruby',
+    'php': 'PHP'
 }
 
 
@@ -52,12 +56,20 @@ styles = {
                    'shebang': None},
     'C':          {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
                    'shebang': None},
-    'bash':       {'line_start': '#',  'prefix': None, 'postfix': None,
+    'shell':       {'line_start': '#',  'prefix': None, 'postfix': None,
                    'shebang': '#!/bin/bash'},
     'javascript': {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
                    'shebang': None},
     'java':       {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
-                   'shebang': None}
+                   'shebang': None},
+    'julia':      {'line_start': '#', 'prefix': None, 'postfix': None,
+                   'shebang': '#!/usr/bin/env julia'},
+    'go':         {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
+                   'shebang': None},
+    'ruby':       {'line_start': '#',  'prefix': None, 'postfix': None,
+                   'shebang': '#!/usr/local/bin/ruby -w'},
+    'PHP':       {'line_start': '//',  'prefix': None, 'postfix': None,
+                   'shebang': '#!/usr/bin/env php'}
 }
 
 

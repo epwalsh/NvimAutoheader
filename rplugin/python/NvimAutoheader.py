@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-18 17:49:10
+# Last Modified: 2016-06-18 19:19:00
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -58,7 +58,7 @@ styles = {
                    'shebang': None},
     'C':          {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
                    'shebang': None},
-    'shell':       {'line_start': '#',  'prefix': None, 'postfix': None,
+    'shell':      {'line_start': '#',  'prefix': None, 'postfix': None,
                    'shebang': '#!/bin/bash'},
     'javascript': {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
                    'shebang': None},
@@ -70,7 +70,7 @@ styles = {
                    'shebang': None},
     'ruby':       {'line_start': '#',  'prefix': None, 'postfix': None,
                    'shebang': '#!/usr/local/bin/ruby -w'},
-    'PHP':       {'line_start': '//',  'prefix': None, 'postfix': None,
+    'PHP':        {'line_start': '//',  'prefix': None, 'postfix': None,
                    'shebang': '#!/usr/bin/env php'}
 }
 

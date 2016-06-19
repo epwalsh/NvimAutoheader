@@ -16,8 +16,11 @@ License: MIT license
 
 CONTENTS					      *NvimAutoheader-contents*
 
-Introduction		    |NvimAutoheader-introduction|
-Install			    |NvimAutoheader-install|
+Introduction................|NvimAutoheader-introduction|
+Install.....................|NvimAutoheader-install|
+Quick start.................|NvimAutoheader-quickstart|
+Global options..............|NvimAutoheader-globaloptions|
+Commands....................|NvimAutoheader-commands|
 
 ===============================================================================
 INTRODUCTION					  *NvimAutoheader-introduction*
@@ -34,3 +37,57 @@ INSTALL						       *NvimAutoheader-install*
 
 NvimAutoheader requires the latest Neovim and Python client for Neovim. To
 update the Python client, `pip install --upgrade neovim`.
+
+===============================================================================
+QUICK START                                         *NvimAutoheader-quickstart*
+
+To automatically insert your name and contact information into the header of a 
+new file, add the following to your vimrc:
+>
+    let g:NvimAutoheader_author = [your name]
+    let g:NvimAutoheader_contact = [your email]
+    let g:NvimAutoheader_website = [your website]
+<
+The default width of headers is 80, but to set a custom width use:
+>
+    let g:NvimAutoheader_width = 100
+<
+NvimAutoheader can automatically insert an open source license into headers as
+well. Simply add 'let g:NvimAutoheader_license = [name of license]' to your
+vimrc. If the license is MIT, Apache-2.0, GPL, or BSD, then by adding
+'let g:NvimAutoheader_license_verbose = 1' the full license will be inserted
+into the header.
+
+If you don't want NvimAutoheader to insert the full text of a license 
+automatically into every new file but still want to include it in some files, 
+use the command |HeaderLicense| to insert one of the available licenses into 
+the file (MIT, GPL, Apache-2.0, and BSD). You can also append an arbitrary text 
+file to the header with the command |HeaderAppend|.
+
+===============================================================================
+GLOBAL OPTIONS                                   *NvimAutoheader-globaloptions*
+
+g:NvimAutoheader_author                               *g:NvimAutoheader_author*
+g:NvimAutoheader_contact                             *g:NvimAutoheader_contact*
+g:NvimAutoheader_website                             *g:NvimAutoheader_website*
+g:NvimAutoheader_width                                 *g:NvimAutoheader_width*
+g:NvimAutoheader_license                             *g:NvimAutoheader_license*
+g:NvimAutoheader_license_verbose             *g:NvimAutoheader_license_verbose*
+
+===============================================================================
+COMMANDS                                              *NvimAutoheader-commands*
+
+HeaderLicense                                    *NvimAutoheader-HeaderLicense*
+
+Insert a full open source license into the header. The options are MIT, GPL,
+Apache-2.0, and BSD. Example:
+>
+    :HeaderLicense MIT
+<
+
+HeaderAppend                                      *NvimAutoheader-HeaderAppend*
+
+Append an arbitrary text file into the header. Example:
+>
+    :HeaderAppend ~/dotfiles/README.md
+<

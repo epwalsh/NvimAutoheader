@@ -69,8 +69,8 @@ let g:NvimAutoheader = 0
 To automatically insert an open source license into the header of new files:
 
 ```vim
-let g:NvimAutoheader_license = 'MIT'      # Automatically add MIT license
-let g:NvimAutoheader_license_verbose = 1  # Put full license text into header
+let g:NvimAutoheader_license = 'MIT'      " Automatically add MIT license
+let g:NvimAutoheader_license_verbose = 1  " Put full license text into header
 ```
 
 To insert a full license into a file use the following command:

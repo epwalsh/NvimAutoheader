@@ -68,6 +68,7 @@ file to the header with the command |HeaderAppend|.
 GLOBAL OPTIONS                                   *NvimAutoheader-globaloptions*
 
 g:NvimAutoheader_author                               *g:NvimAutoheader_author*
+g:NvimAutoheader_organization                   *g:NvimAutoheader_organization*
 g:NvimAutoheader_contact                             *g:NvimAutoheader_contact*
 g:NvimAutoheader_website                             *g:NvimAutoheader_website*
 g:NvimAutoheader_width                                 *g:NvimAutoheader_width*

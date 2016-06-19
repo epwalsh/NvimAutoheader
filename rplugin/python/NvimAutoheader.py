@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-18 19:19:00
+# Last Modified: 2016-06-19 18:29:42
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -183,6 +183,7 @@ class NvimAutoheader(object):
         line_start = styles[ft]['line_start']
         cb = self.nvim.current.buffer
         author = self.nvim.eval('g:NvimAutoheader_author')
+        org = self.nvim.eval('g:NvimAutoheader_organization')
         contact = self.nvim.eval('g:NvimAutoheader_contact')
         website = self.nvim.eval('g:NvimAutoheader_website')
         width = self.nvim.eval('g:NvimAutoheader_width')
@@ -199,6 +200,8 @@ class NvimAutoheader(object):
         cb.append(line_start + ' File Name:     ' + filename)
         if len(author) > 0:
             cb.append(line_start + ' Author:        ' + author)
+        if len(org) > 0:
+            cb.append(line_start + ' Organization:  ' + org)
         if len(contact) > 0:
             cb.append(line_start + ' Contact:       ' + contact)
         if len(website) > 0:

@@ -3,7 +3,7 @@
 " Author:        Evan Pete Walsh
 " Contact:       epwalsh10@gmail.com
 " Creation Date: 2016-06-16
-" Last Modified: 2016-06-17 18:58:01
+" Last Modified: 2016-06-19 18:28:22
 " LICENSE:       The MIT License
 "
 "    Copyright (c) 2016 Evan Pete Walsh
@@ -48,6 +48,9 @@ if g:NvimAutoheader
     endif
     if !exists('g:NvimAutoheader_website')
         let g:NvimAutoheader_website = ''
+    endif
+    if !exists('g:NvimAutoheader_organization')
+        let g:NvimAutoheader_organization = ''
     endif
     if !exists('g:NvimAutoheader_width')
         let g:NvimAutoheader_width = 80

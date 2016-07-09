@@ -4,7 +4,7 @@
 
 Automatic header management for [Neovim](https://github.com/neovim/neovim) 
 
-![](doc/NvimAutoheader_main.gif)
+![](doc/images/NvimAutoheader_main.gif)
 
 Currently supported filetypes:
 - Python

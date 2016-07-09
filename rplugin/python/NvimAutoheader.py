@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-06-19 18:29:42
+# Last Modified: 2016-07-09 13:52:34
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -35,7 +35,7 @@ from time import strftime
 
 
 filetypes = {
-    'py': 'python',
+    'py': 'python', 'pyx': 'python',
     'r': 'R',
     'c': 'C', 'cpp': 'C', 'h': 'C', 'hpp': 'C',
     'sh': 'shell',

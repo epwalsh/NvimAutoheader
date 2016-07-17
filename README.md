@@ -97,3 +97,7 @@ To insert an arbitrary file into the header:
 ```vim
 :HeaderAppend [path to file]
 ```
+
+### Bug reports
+
+Please submit an issue at [github.com/epwalsh/NvimAutoheader/issues](https://github.com/epwalsh/NvimAutoheader/issues)

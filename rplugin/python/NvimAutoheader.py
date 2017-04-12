@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2016-07-09 13:52:34
+# Last Modified: 2017-04-12 15:58:05
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -28,16 +28,29 @@
 #    
 # =============================================================================
 
-import neovim
+"""
+Nvim Autoheader main functions.
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import re
-import os.path
+import os
 from time import strftime
+
+import neovim
 
 
 filetypes = {
-    'py': 'python', 'pyx': 'python',
+    'py': 'python', 
+    'pyx': 'python',
     'r': 'R',
-    'c': 'C', 'cpp': 'C', 'h': 'C', 'hpp': 'C',
+    'c': 'C', 
+    'cpp': 'C', 
+    'h': 'C', 
+    'hpp': 'C',
     'sh': 'shell',
     'vim': 'vim',
     'js': 'javascript',
@@ -50,28 +63,72 @@ filetypes = {
 
 
 styles = {
-    'python':     {'line_start': '#',  'prefix': None, 'postfix': None,
-                   'shebang': '#!/usr/bin/env python'},
-    'vim':        {'line_start': '"',  'prefix': None, 'postfix': None,
-                   'shebang': None},
-    'R':          {'line_start': '#',  'prefix': None, 'postfix': None,
-                   'shebang': None},
-    'C':          {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
-                   'shebang': None},
-    'shell':      {'line_start': '#',  'prefix': None, 'postfix': None,
-                   'shebang': '#!/bin/bash'},
-    'javascript': {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
-                   'shebang': None},
-    'java':       {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
-                   'shebang': None},
-    'julia':      {'line_start': '#', 'prefix': None, 'postfix': None,
-                   'shebang': '#!/usr/bin/env julia'},
-    'go':         {'line_start': ' *', 'prefix': '/*', 'postfix': ' */',
-                   'shebang': None},
-    'ruby':       {'line_start': '#',  'prefix': None, 'postfix': None,
-                   'shebang': '#!/usr/local/bin/ruby -w'},
-    'PHP':        {'line_start': '//',  'prefix': None, 'postfix': None,
-                   'shebang': '#!/usr/bin/env php'}
+    'python': {
+        'line_start': '#',  
+        'prefix': None, 
+        'postfix': None,
+        'shebang': '#!/usr/bin/env python'
+    },
+    'vim': {
+        'line_start': '"',  
+        'prefix': None, 
+        'postfix': None,
+        'shebang': None
+    },
+    'R': {
+        'line_start': '#',  
+        'prefix': None, 
+        'postfix': None,
+        'shebang': None
+    },
+    'C': {
+        'line_start': ' *', 
+        'prefix': '/*', 
+        'postfix': ' */',
+        'shebang': None
+    },
+    'shell': {
+        'line_start': '#',  
+        'prefix': None, 
+        'postfix': None,
+        'shebang': '#!/bin/bash'
+    },
+    'javascript': {
+        'line_start': ' *', 
+        'prefix': '/*', 
+        'postfix': ' */',
+        'shebang': None
+    },
+    'java': {
+        'line_start': ' *', 
+        'prefix': '/*', 
+        'postfix': ' */',
+        'shebang': None
+    },
+    'julia': {
+        'line_start': '#', 
+        'prefix': None, 
+        'postfix': None,
+        'shebang': '#!/usr/bin/env julia'
+    },
+    'go': {
+        'line_start': ' *', 
+        'prefix': '/*', 
+        'postfix': ' */',
+        'shebang': None
+    },
+    'ruby': {
+        'line_start': '#',  
+        'prefix': None, 
+        'postfix': None,
+        'shebang': '#!/usr/local/bin/ruby -w'
+    },
+    'PHP': {
+        'line_start': '//',  
+        'prefix': None, 
+        'postfix': None,
+        'shebang': '#!/usr/bin/env php'
+    }
 }
 
 
@@ -81,46 +138,37 @@ class NvimAutoheader(object):
     def __init__(self, nvim):
         self.nvim = nvim
 
-
-    def edit_name(self, filename):  # {{{
+    def edit_name(self, filename):
         cb = self.nvim.current.buffer
         n = min([12, len(cb)])
         for index in range(n):
             if re.search(r'File Name:\s.*', cb[index]):
                 cb[index] = re.sub(r'(^.*File Name:\s*)([^\s].*)$', r'\1' + filename, cb[index])
-    # }}}
     
-    
-    def edit_timestamp(self):  # {{{
+    def edit_timestamp(self):
         cb = self.nvim.current.buffer
         time = strftime('%Y-%m-%d %H:%M:%S')
         n = min([12, len(cb)])
         for index in range(n):
             if re.search(r'Last Modified:.*', cb[index]):
                 cb[index] = re.sub(r'(^.*Last Modified:).*$', r'\1 ' + time, cb[index])
-    # }}}
     
-    
-    def find_header_end(self):  # {{{
+    def find_header_end(self):
         cb = self.nvim.current.buffer
         n = min([12, len(cb)])
         for index in range(n):
             if re.search(r'Last Modified:.*', cb[index]):
                 return index + 1
         return 0
-    # }}}
 
-
-    def format_wrap(self, width, start, stop):  # {{{
+    def format_wrap(self, width, start, stop):
         tw = self.nvim.eval('&tw')
         self.nvim.command('set formatoptions+=w')
         self.nvim.command('set tw=' + str(width - 1))
         self.nvim.command('normal! ' + str(start) + 'gggq' + str(stop) + 'gg')
         self.nvim.command('set tw=' + str(tw))
-    # }}}
 
-
-    def insert(self, paths, index, prefix=''):  # {{{
+    def insert(self, paths, index, prefix=''):
         """
         Insert files from list of paths starting at 'index'.
         """
@@ -136,10 +184,8 @@ class NvimAutoheader(object):
             index += k
             self.insert_text(index, prefix)
             index += 1
-    # }}}
 
-
-    def insert_text(self, index, text):  # {{{
+    def insert_text(self, index, text):
         """
         Insert text into given line in buffer.
         """
@@ -147,15 +193,20 @@ class NvimAutoheader(object):
         temp = cb[index:]
         cb[index] = text
         cb[(index + 1):] = temp
-    # }}}
 
+    def get_append_file(self, ext, path):
+        if path[-1] != '/':
+            path = path + '/'
+        files = os.listdir(path)
+        for fname in files:
+            if re.search(r'.*\.' + ext + '$', fname):
+                return path + fname
+        return None
     
-    def print_error(self, msg):  # {{{
+    def print_error(self, msg):
         self.nvim.command('echohl Error | echomsg "[NvimAutoheader] ' + msg + '" | echohl None')
-    # }}}
 
-
-    @neovim.function('Update_header', eval='expand("<afile>")', sync=True)  # {{{
+    @neovim.function('Update_header', eval='expand("<afile>")', sync=True)
     def on_file_write(self, args, filename):
         """
         Update the 'Last Modified' time when file is written.
@@ -166,10 +217,8 @@ class NvimAutoheader(object):
         self.edit_name(filename)
         self.edit_timestamp()
         self.nvim.command('set nomodified')
-    # }}}
 
-
-    @neovim.function('InsertHeader', eval='expand("<afile>")')  # {{{
+    @neovim.function('InsertHeader', eval='expand("<afile>")')
     def insert_header(self, args, filename):
         """
         Insert the header at the top of file when new file is opened for the 
@@ -189,6 +238,7 @@ class NvimAutoheader(object):
         width = self.nvim.eval('g:NvimAutoheader_width')
         license = self.nvim.eval('g:NvimAutoheader_license')
         license_verbose = self.nvim.eval('g:NvimAutoheader_license_verbose')
+        append_path = self.nvim.eval('g:NvimAutoheader_append_path')
 
         if styles[ft]['shebang'] is None:
             cb[0] = line_start + ' ' + ''.join('=' * (width - 3))
@@ -209,7 +259,6 @@ class NvimAutoheader(object):
         cb.append(line_start + ' Creation Date: ' + strftime('%Y-%m-%d'))
         cb.append(line_start + ' Last Modified: ')
         start = len(cb) + 1
-        # Insert license {{{
         if len(license) > 0:
             if license_verbose > 0:
                 path = self.nvim.eval('g:NvimAutoheader_location')
@@ -229,21 +278,30 @@ class NvimAutoheader(object):
                     cb.append(line_start + ' LICENSE:       ' + license)
             else:
                 cb.append(line_start + ' LICENSE:       ' + license)
-        # }}}
         if styles[ft]['postfix'] is not None:
             cb.append(line_start + ' ' + ''.join('=' * (width - 4)))
             cb.append(styles[ft]['postfix'])
         else:
             cb.append(line_start + ' ' + ''.join('=' * (width - 3)))
         cb.append('')
+
+        if append_path:
+            append_file = self.get_append_file(ext, append_path)
+            if append_file:
+                try:
+                    with open(append_file, 'r') as f:
+                        for line in f.readlines():
+                            cb.append(line.rstrip())
+                    cb.append('')
+                except Exception as ex:
+                    self.print_error('NvimAutoheader error: %s' % ex.message)
+
         cb.append('')
 
         self.nvim.current.window.cursor = [len(cb), 0]
         self.nvim.command('set nomodified')  
-    # }}}
 
-
-    @neovim.command('HeaderLicense', nargs=1)  # {{{
+    @neovim.command('HeaderLicense', nargs=1)
     def insert_license(self, args):
         ext = self.nvim.eval('expand("%:e")').lower()
         if ext not in filetypes.keys():
@@ -268,10 +326,8 @@ class NvimAutoheader(object):
         self.insert_text(index + 3, line_start)
         self.insert([path + '/licenses/' + args[0]], index + 4, line_start + '    ')
         self.format_wrap(width, index + 5, index + len(cb) - n)
-    # }}}
 
-
-    @neovim.command('HeaderAppend', nargs='*')  # {{{
+    @neovim.command('HeaderAppend', nargs='*')
     def append_header(self, args):
         ext = self.nvim.eval('expand("%:e")').lower()
         if ext not in filetypes.keys():
@@ -288,4 +344,3 @@ class NvimAutoheader(object):
         self.insert_text(index, line_start)
         self.insert(args, index + 1, line_start + ' ')
         self.format_wrap(width, index + 2, index + len(cb) - n)
-    # }}}

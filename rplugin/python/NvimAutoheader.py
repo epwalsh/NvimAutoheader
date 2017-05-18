@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2017-05-17 20:16:43
+# Last Modified: 2017-05-17 20:25:25
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -143,7 +143,7 @@ class NvimAutoheader(object):
         n = min([12, len(cb)])
         for index in range(n):
             if re.search(r'File Name:\s.*', cb[index]):
-                cb[index] = re.sub(r'(^.*File Name:\s*)([^\s].*)$', r'\1' + filename, cb[index])
+                cb[index] = re.sub(r'(^.*File Name:\s*)([^\s].*)$', r'\g<1>' + filename, cb[index])
     
     def edit_timestamp(self):
         cb = self.nvim.current.buffer
@@ -151,7 +151,7 @@ class NvimAutoheader(object):
         n = min([12, len(cb)])
         for index in range(n):
             if re.search(r'Last Modified:.*', cb[index]):
-                cb[index] = re.sub(r'(^.*Last Modified:).*$', r'\1 ' + time, cb[index])
+                cb[index] = re.sub(r'(^.*Last Modified:).*$', r'\g<1> ' + time, cb[index])
     
     def find_header_end(self):
         cb = self.nvim.current.buffer

@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2017-04-12 15:58:05
+# Last Modified: 2017-05-17 20:16:43
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -206,7 +206,7 @@ class NvimAutoheader(object):
     def print_error(self, msg):
         self.nvim.command('echohl Error | echomsg "[NvimAutoheader] ' + msg + '" | echohl None')
 
-    @neovim.function('Update_header', eval='expand("<afile>")', sync=True)
+    @neovim.function('Update_header', eval='expand("%:t")', sync=True)
     def on_file_write(self, args, filename):
         """
         Update the 'Last Modified' time when file is written.
@@ -218,7 +218,7 @@ class NvimAutoheader(object):
         self.edit_timestamp()
         self.nvim.command('set nomodified')
 
-    @neovim.function('InsertHeader', eval='expand("<afile>")')
+    @neovim.function('InsertHeader', eval='expand("%:t")')
     def insert_header(self, args, filename):
         """
         Insert the header at the top of file when new file is opened for the 
@@ -294,7 +294,7 @@ class NvimAutoheader(object):
                             cb.append(line.rstrip())
                     cb.append('')
                 except Exception as ex:
-                    self.print_error('NvimAutoheader error: %s' % ex.message)
+                    self.print_error('error: %s' % ex.message)
 
         cb.append('')
 

@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2017-05-17 20:25:25
+# Last Modified: 2017-06-13 17:10:22
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -91,7 +91,7 @@ styles = {
         'line_start': '#',  
         'prefix': None, 
         'postfix': None,
-        'shebang': '#!/bin/bash'
+        'shebang': '#!/usr/bin/env bash'
     },
     'javascript': {
         'line_start': ' *', 

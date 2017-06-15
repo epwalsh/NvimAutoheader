@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2017-06-13 17:10:22
+# Last Modified: 2017-06-15 12:57:35
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -58,7 +58,8 @@ filetypes = {
     'jl': 'julia',
     'go': 'go',
     'rb': 'ruby',
-    'php': 'PHP'
+    'php': 'PHP',
+    'tex': 'tex',
 }
 
 
@@ -128,6 +129,12 @@ styles = {
         'prefix': None, 
         'postfix': None,
         'shebang': '#!/usr/bin/env php'
+    },
+    'tex': {
+        'line_start': '%',
+        'prefix': None,
+        'postfix': None,
+        'shebang': None,
     }
 }
 
@@ -228,17 +235,17 @@ class NvimAutoheader(object):
         if ext not in filetypes.keys():
             return None
 
-        ft = filetypes[ext]
-        line_start = styles[ft]['line_start']
-        cb = self.nvim.current.buffer
-        author = self.nvim.eval('g:NvimAutoheader_author')
-        org = self.nvim.eval('g:NvimAutoheader_organization')
-        contact = self.nvim.eval('g:NvimAutoheader_contact')
-        website = self.nvim.eval('g:NvimAutoheader_website')
-        width = self.nvim.eval('g:NvimAutoheader_width')
-        license = self.nvim.eval('g:NvimAutoheader_license')
+        ft              = filetypes[ext]
+        line_start      = styles[ft]['line_start']
+        cb              = self.nvim.current.buffer
+        author          = self.nvim.eval('g:NvimAutoheader_author')
+        org             = self.nvim.eval('g:NvimAutoheader_organization')
+        contact         = self.nvim.eval('g:NvimAutoheader_contact')
+        website         = self.nvim.eval('g:NvimAutoheader_website')
+        width           = self.nvim.eval('g:NvimAutoheader_width')
+        license         = self.nvim.eval('g:NvimAutoheader_license')
         license_verbose = self.nvim.eval('g:NvimAutoheader_license_verbose')
-        append_path = self.nvim.eval('g:NvimAutoheader_append_path')
+        append_path     = self.nvim.eval('g:NvimAutoheader_append_path')
 
         if styles[ft]['shebang'] is None:
             cb[0] = line_start + ' ' + ''.join('=' * (width - 3))
@@ -247,7 +254,9 @@ class NvimAutoheader(object):
         else:
             cb[0] = styles[ft]['shebang']
             cb.append(line_start + ' ' + ''.join('=' * (width - 3)))
+
         cb.append(line_start + ' File Name:     ' + filename)
+
         if len(author) > 0:
             cb.append(line_start + ' Author:        ' + author)
         if len(org) > 0:
@@ -256,8 +265,10 @@ class NvimAutoheader(object):
             cb.append(line_start + ' Contact:       ' + contact)
         if len(website) > 0:
             cb.append(line_start + ' Website:       ' + website)
+
         cb.append(line_start + ' Creation Date: ' + strftime('%Y-%m-%d'))
         cb.append(line_start + ' Last Modified: ')
+
         start = len(cb) + 1
         if len(license) > 0:
             if license_verbose > 0:
@@ -266,11 +277,14 @@ class NvimAutoheader(object):
                     cb.append(line_start + ' LICENSE:       ' + 'The ' + license + ' License')
                     with open(path + '/licenses/' + license, 'r') as f:
                         lines = f.read().splitlines()
+
                     cb.append(line_start)
                     cb.append(line_start + '    Copyright (c) ' + strftime('%Y') + ' ' + author)
                     cb.append(line_start)
+
                     for line in lines:
                         cb.append(line_start + '    ' + line)
+
                     cb.append(line_start)
                     self.format_wrap(width, start, len(cb))
                 else:
@@ -278,25 +292,22 @@ class NvimAutoheader(object):
                     cb.append(line_start + ' LICENSE:       ' + license)
             else:
                 cb.append(line_start + ' LICENSE:       ' + license)
+
         if styles[ft]['postfix'] is not None:
             cb.append(line_start + ' ' + ''.join('=' * (width - 4)))
             cb.append(styles[ft]['postfix'])
         else:
             cb.append(line_start + ' ' + ''.join('=' * (width - 3)))
+
         cb.append('')
 
         if append_path:
             append_file = self.get_append_file(ext, append_path)
             if append_file:
-                try:
-                    with open(append_file, 'r') as f:
-                        for line in f.readlines():
-                            cb.append(line.rstrip())
-                    cb.append('')
-                except Exception as ex:
-                    self.print_error('error: %s' % ex.message)
+                self.nvim.current.window.cursor = [len(cb), 0]
+                self.nvim.command('r %s' % append_file)
 
-        cb.append('')
+        #  cb.append('')
 
         self.nvim.current.window.cursor = [len(cb), 0]
         self.nvim.command('set nomodified')  
@@ -312,14 +323,15 @@ class NvimAutoheader(object):
             self.print_error('no copy of this license found')
             return None
 
-        ft = filetypes[ext]
-        line_start = styles[ft]['line_start']
         cb = self.nvim.current.buffer
-        author = self.nvim.eval('g:NvimAutoheader_author')
-        index = self.find_header_end()
-        width = self.nvim.eval('g:NvimAutoheader_width')
-
         n = len(cb)
+
+        ft         = filetypes[ext]
+        line_start = styles[ft]['line_start']
+        author     = self.nvim.eval('g:NvimAutoheader_author')
+        index      = self.find_header_end()
+        width      = self.nvim.eval('g:NvimAutoheader_width')
+
         self.insert_text(index, line_start + ' LICENSE:       ' + 'The ' + args[0] + ' License')
         self.insert_text(index + 1, line_start)
         self.insert_text(index + 2, line_start + '    Copyright (c) ' + strftime('%Y') + ' ' + author)
@@ -334,13 +346,14 @@ class NvimAutoheader(object):
             self.print_error("Sorry, we don't know how to handle this filetype yet")
             return None
 
-        ft = filetypes[ext]
-        line_start = styles[ft]['line_start']
         cb = self.nvim.current.buffer
-        index = self.find_header_end()
-        width = self.nvim.eval('g:NvimAutoheader_width')
-
         n = len(cb)
+
+        ft         = filetypes[ext]
+        line_start = styles[ft]['line_start']
+        index      = self.find_header_end()
+        width      = self.nvim.eval('g:NvimAutoheader_width')
+
         self.insert_text(index, line_start)
         self.insert(args, index + 1, line_start + ' ')
         self.format_wrap(width, index + 2, index + len(cb) - n)

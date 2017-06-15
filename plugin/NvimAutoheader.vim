@@ -3,7 +3,7 @@
 " Author:        Evan Pete Walsh
 " Contact:       epwalsh10@gmail.com
 " Creation Date: 2016-06-16
-" Last Modified: 2017-04-12 15:07:44
+" Last Modified: 2017-06-15 17:41:24
 " LICENSE:       The MIT License
 "
 "    Copyright (c) 2016 Evan Pete Walsh
@@ -28,10 +28,6 @@
 "    
 " =============================================================================
 
-
-" if !has('nvim') || !has('python')
-    " echohl Error | echomsg 'NvimAutoheader requires python and neovim' | echohl None
-" endif
 
 if !exists('g:NvimAutoheader')
     let g:NvimAutoheader = 1

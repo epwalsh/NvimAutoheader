@@ -3,7 +3,7 @@
 # Author:        Evan 'Pete' Walsh
 # Contact:       epwalsh@iastate.edu
 # Creation Date: 2016-06-16
-# Last Modified: 2017-06-15 12:57:35
+# Last Modified: 2017-06-22 13:24:03
 # LICENSE:       The MIT License
 #
 #    Copyright (c) 2016 Evan Pete Walsh
@@ -258,7 +258,7 @@ class NvimAutoheader(object):
         cb.append(line_start + ' File Name:     ' + filename)
 
         if len(author) > 0:
-            cb.append(line_start + ' Author:        ' + author)
+            cb.append(line_start + ' Orig Author:   ' + author)
         if len(org) > 0:
             cb.append(line_start + ' Organization:  ' + org)
         if len(contact) > 0:
